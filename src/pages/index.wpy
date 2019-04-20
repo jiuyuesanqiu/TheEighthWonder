@@ -1,0 +1,212 @@
+<style>
+  .fixed-bottom {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+  page{
+    background-color: #efefef;
+  }
+  .mt-2{
+    margin-top: 10px !important;
+  }
+  .mt-5{
+    margin-top: 20px !important;
+  }
+</style>
+<template>
+  <view>
+    <view class="mt-2">
+      <van-cell-group>
+        <van-cell
+          title="定投周期"
+          @click="onUnitClick"
+          value="{{unit}}"
+          value-class="value-class"
+          size="large"
+          is-link></van-cell>
+        <van-field
+          value="{{ fixedMoney }}"
+          @input="onFixedMoneyInput"
+          required
+          clearable
+          label="每期定投"
+          maxlength="6"
+          type="number"
+          input-align="right"
+          use-icon-slot
+          size="large"
+          placeholder="请输入定投金额">
+          <view slot="icon">
+            元
+          </view>
+        </van-field>
+        <van-field
+          value="{{ fixedTime }}"
+          required
+          clearable
+          label="定投年限"
+          maxlength="3"
+          type="number"
+          input-align="right"
+          @input="onFixedTimeInput"
+          use-icon-slot
+          size="large"
+          placeholder="打算定投几年">
+          <view slot="icon">
+            年
+          </view>
+        </van-field>
+        <van-field
+          value="{{ expectInterest }}"
+          required
+          clearable
+          @input="onExpectInterestInput"
+          label="年化收益率"
+          maxlength="3"
+          type="number"
+          input-align="right"
+          use-icon-slot
+          size="large"
+          placeholder="请输入预期年化收益率">
+          <view slot="icon">
+            %
+          </view>
+        </van-field>
+      </van-cell-group>
+    </view>
+    <view class="mt-5">
+      <van-cell-group>
+        <van-cell
+          title="投入总本金"
+          value="{{principal}}"
+          size="large"
+          value-class="value-class">
+        </van-cell>
+        <van-cell
+          title="定投总收益"
+          value="{{totalRevenue}}"
+          size="large"
+          value-class="value-class">
+        </van-cell>
+        <van-cell
+          title="期末总资产"
+          value="{{totalAssets}}"
+          size="large"
+          value-class="value-class">
+        </van-cell>
+      </van-cell-group>
+    </view>
+    <van-button class="fixed-bottom" disabled="{{disabled}}" @click="calculate" size="large" type="info">计算</van-button>
+    <van-popup
+      show="{{ show }}"
+      position="bottom"
+      bind:click-overlay="closeOverlay"
+    >
+      <van-picker columns="{{ columns }}" @cancel="closeOverlay" @confirm="onPickerConfirm" show-toolbar></van-picker>
+    </van-popup>
+  </view>
+</template>
+<script>
+  import wepy from 'wepy';
+
+  export default class MyPage extends wepy.page {
+    config = {
+      navigationBarTitleText:'定投计算器',
+      "usingComponents": {
+        "van-button": "../components/vant/button/index",
+        "van-cell": "../components/vant/cell/index",
+        "van-cell-group": "../components/vant/cell-group/index",
+        "van-field": "../components/vant/field/index",
+        "van-popup": "../components/vant/popup/index",
+        "van-picker": "../components/vant/picker/index",
+      }
+    };
+
+    data = {
+      fixedMoney:500,
+      fixedTime:20,
+      unit:'每月',
+      expectInterest:15,
+      checked:true,
+      show:false,
+      columns:['每月','每周'],
+      principal:"点击计算得出",
+      totalRevenue:"点击计算得出",
+      totalAssets:"点击计算得出",
+    };
+
+    computed = {
+      disabled () {
+        return !(this.fixedMoney&&this.fixedTime&&this.expectInterest);
+      }
+    };
+    toThouands(num) {
+      return (num || 0).toString().replace(/(\d)(?=(?:\d{3})+$)/g, '$1,');
+    };
+
+    dealNumber(str){
+      if (str.indexOf('.')!==-1) {
+        return str.replace(str.substring(str.indexOf('.')+3,str.indexOf('e')),'');
+      }else if(str.indexOf("Infinity")!==-1){
+        return "阁下这是要逆天吗？"
+      }
+      return str;
+    }
+    methods = {
+      onChange(){
+        console.log("change")
+      },
+      onFixedMoneyInput(e){
+        this.fixedMoney = e.detail;
+      },
+      onFixedTimeInput(e){
+        this.fixedTime = e.detail;
+      },
+      onExpectInterestInput(e){
+        this.expectInterest = e.detail;
+      },
+      calculate(){
+        let y = 1/12;
+        let z = this.fixedTime * 12;
+        if (this.unit==='每周') {
+          y = 1/52;
+          z = this.fixedTime * 52;
+        }
+        let x = Math.pow(1+this.expectInterest/100,y);
+        let amount = Math.floor(this.fixedMoney*x*(Math.pow(x,z)-1)/(x-1));
+        this.principal = this.toThouands(z*this.fixedMoney)+'元';
+        let tempTotalRevenue = this.toThouands(amount-z*this.fixedMoney)+'元';
+        this.totalRevenue = this.dealNumber(tempTotalRevenue);
+        let tempTotalAssets = this.toThouands(amount)+'元';
+        this.totalAssets = this.dealNumber(tempTotalAssets);
+      },
+      onUnitClick(){
+        this.show = true;
+      },
+      closeOverlay(){
+        this.show = false;
+      },
+      onPickerConfirm(e){
+        const { value} = e.detail;
+        this.unit = value;
+        this.show = false;
+      }
+    };
+    onShow(){
+      this.principal="点击计算得出";
+      this.totalRevenue="点击计算得出";
+      this.totalAssets="点击计算得出";
+    }
+    onShareAppMessage(res){
+      if (res.from === 'button') {
+        console.log(res.target)
+      }
+      return {
+        title: '极简定投计算器',
+        path: '/pages/index'
+      }
+    }
+  }
+</script>
