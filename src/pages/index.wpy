@@ -6,26 +6,24 @@
     left: 0;
   }
   page{
-    background-color: #efefef;
+    background-color: #f7f7f7;
   }
-  .mt-2{
-    margin-top: 10px !important;
-  }
-  .mt-5{
-    margin-top: 20px !important;
+  .text-primary{
+    color: #09bb07 !important;
   }
 </style>
 <template>
   <view>
     <view class="mt-2">
       <van-cell-group>
-        <van-cell
-          title="定投周期"
-          @click="onUnitClick"
-          value="{{unit}}"
-          value-class="value-class"
-          size="large"
-          is-link></van-cell>
+        <picker bindchange="bindPickerChange" value="{{index}}" range="{{columns}}">
+          <van-cell
+            title="定投周期"
+            value="{{unit}}"
+            value-class="value-class"
+            size="large"
+            is-link></van-cell>
+        </picker>
         <van-field
           value="{{ fixedMoney }}"
           @input="onFixedMoneyInput"
@@ -37,7 +35,7 @@
           input-align="right"
           use-icon-slot
           size="large"
-          placeholder="请输入定投金额">
+          placeholder="每期定投金额">
           <view slot="icon">
             元
           </view>
@@ -53,7 +51,7 @@
           @input="onFixedTimeInput"
           use-icon-slot
           size="large"
-          placeholder="打算定投几年">
+          placeholder="打算定投多久">
           <view slot="icon">
             年
           </view>
@@ -69,7 +67,7 @@
           input-align="right"
           use-icon-slot
           size="large"
-          placeholder="请输入预期年化收益率">
+          placeholder="预期年化收益率">
           <view slot="icon">
             %
           </view>
@@ -98,14 +96,10 @@
         </van-cell>
       </van-cell-group>
     </view>
-    <van-button class="fixed-bottom" disabled="{{disabled}}" @click="calculate" size="large" type="info">计算</van-button>
-    <van-popup
-      show="{{ show }}"
-      position="bottom"
-      bind:click-overlay="closeOverlay"
-    >
-      <van-picker columns="{{ columns }}" @cancel="closeOverlay" @confirm="onPickerConfirm" show-toolbar></van-picker>
-    </van-popup>
+    <view class="mx-3 mt-5">
+      <button class="weui-btn" type="primary" disabled="{{disabled}}" @tap="calculate">计算</button>
+      <button class="weui-btn text-primary" type="default" @tap="reset">复位</button>
+    </view>
   </view>
 </template>
 <script>
@@ -118,10 +112,10 @@
         "van-button": "../components/vant/button/index",
         "van-cell": "../components/vant/cell/index",
         "van-cell-group": "../components/vant/cell-group/index",
-        "van-field": "../components/vant/field/index",
-        "van-popup": "../components/vant/popup/index",
-        "van-picker": "../components/vant/picker/index",
-      }
+        "van-field": "../components/vant/field/index"
+      },
+      navigationBarBackgroundColor:'#f7f7f7',
+      backgroundColor:'#f7f7f7'
     };
 
     data = {
@@ -129,8 +123,6 @@
       fixedTime:20,
       unit:'每月',
       expectInterest:15,
-      checked:true,
-      show:false,
       columns:['每月','每周'],
       principal:"点击计算得出",
       totalRevenue:"点击计算得出",
@@ -142,7 +134,8 @@
         return !(this.fixedMoney&&this.fixedTime&&this.expectInterest);
       }
     };
-    toThouands(num) {
+
+    toThousand(num) {
       return (num || 0).toString().replace(/(\d)(?=(?:\d{3})+$)/g, '$1,');
     };
 
@@ -176,22 +169,23 @@
         }
         let x = Math.pow(1+this.expectInterest/100,y);
         let amount = Math.floor(this.fixedMoney*x*(Math.pow(x,z)-1)/(x-1));
-        this.principal = this.toThouands(z*this.fixedMoney)+'元';
-        let tempTotalRevenue = this.toThouands(amount-z*this.fixedMoney)+'元';
+        this.principal = this.toThousand(z*this.fixedMoney)+'元';
+        let tempTotalRevenue = this.toThousand(amount-z*this.fixedMoney)+'元';
         this.totalRevenue = this.dealNumber(tempTotalRevenue);
-        let tempTotalAssets = this.toThouands(amount)+'元';
+        let tempTotalAssets = this.toThousand(amount)+'元';
         this.totalAssets = this.dealNumber(tempTotalAssets);
       },
-      onUnitClick(){
-        this.show = true;
+      bindPickerChange(e){
+        this.unit = this.columns[e.detail.value];
       },
-      closeOverlay(){
-        this.show = false;
-      },
-      onPickerConfirm(e){
-        const { value} = e.detail;
-        this.unit = value;
-        this.show = false;
+      reset(){
+        this.fixedMoney='';
+        this.fixedTime='';
+        this.unit='每月';
+        this.expectInterest='';
+        this.principal="点击计算得出";
+        this.totalRevenue="点击计算得出";
+        this.totalAssets="点击计算得出";
       }
     };
     onShow(){
