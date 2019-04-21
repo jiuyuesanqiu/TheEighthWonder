@@ -106,7 +106,6 @@
       totalRevenue:"点击计算得出",
       totalAssets:"点击计算得出",
     };
-
     computed = {
       disabled () {
         return !(this.fixedMoney&&this.fixedTime&&this.expectInterest);
@@ -171,6 +170,7 @@
       this.totalRevenue="点击计算得出";
       this.totalAssets="点击计算得出";
     }
+
     onShareAppMessage(res){
       if (res.from === 'button') {
         console.log(res.target)

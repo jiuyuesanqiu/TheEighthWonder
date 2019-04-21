@@ -71,62 +71,73 @@
   </view>
 </template>
 <script>
-import wepy from 'wepy';
+  import wepy from 'wepy';
 
-export default class Compound extends wepy.page {
-  config = {
-    navigationBarTitleText:'复利计算器',
-    navigationBarBackgroundColor:'#f7f7f7',
-    backgroundColor:'#f7f7f7'
-  };
-    data = {
-      presentValue:'',
-      fixedTime:'',
-      expectInterest:'',
-      totalRevenue:'点击计算得出',
-      futureValue:'点击计算得出'
+  export default class Compound extends wepy.page {
+    config = {
+      navigationBarTitleText: '复利计算器',
+      navigationBarBackgroundColor: '#f7f7f7',
+      backgroundColor: '#f7f7f7'
     };
-  toThousand(num) {
-    return (num || 0).toString().replace(/(\d)(?=(?:\d{3})+$)/g, '$1,');
-  };
+    data = {
+      presentValue: '',
+      fixedTime: '',
+      expectInterest: '',
+      totalRevenue: '点击计算得出',
+      futureValue: '点击计算得出'
+    };
 
-  dealNumber(str){
-    if (str.indexOf('.')!==-1) {
-      return str.replace(str.substring(str.indexOf('.')+3,str.indexOf('e')),'');
-    }else if(str.indexOf("Infinity")!==-1){
-      return "天文数字，无法计算"
+    toThousand(num) {
+      return (num || 0).toString().replace(/(\d)(?=(?:\d{3})+$)/g, '$1,');
+    };
+
+    dealNumber(str) {
+      if (str.indexOf('.') !== -1) {
+        return str.replace(str.substring(str.indexOf('.') + 3, str.indexOf('e')), '');
+      } else if (str.indexOf('Infinity') !== -1) {
+        return '天文数字，无法计算';
+      }
+      return str;
     }
-    return str;
-  }
+
     methods = {
-      onPresentValueInput(e){
+      onPresentValueInput(e) {
         this.presentValue = e.detail;
       },
-      onFixedTimeInput(e){
+      onFixedTimeInput(e) {
         this.fixedTime = e.detail;
       },
-      onExpectInterestInput(e){
+      onExpectInterestInput(e) {
         this.expectInterest = e.detail;
       },
-      calculate(){
-        let tempFutureValue = Math.trunc(this.presentValue*(1+this.expectInterest/100)**this.fixedTime);
-        console.log(tempFutureValue)
-        this.futureValue = this.dealNumber(this.toThousand(tempFutureValue)+'元');
-        this.totalRevenue = this.dealNumber(this.toThousand(tempFutureValue-this.presentValue)+'元');
+      calculate() {
+        let tempFutureValue = Math.trunc(this.presentValue * (1 + this.expectInterest / 100) ** this.fixedTime);
+        console.log(tempFutureValue);
+        this.futureValue = this.dealNumber(this.toThousand(tempFutureValue) + '元');
+        this.totalRevenue = this.dealNumber(this.toThousand(tempFutureValue - this.presentValue) + '元');
       },
-      reset(){
-        this.presentValue='';
-        this.fixedTime='';
-        this.expectInterest='';
-        this.totalRevenue="点击计算得出";
-        this.futureValue="点击计算得出";
+      reset() {
+        this.presentValue = '';
+        this.fixedTime = '';
+        this.expectInterest = '';
+        this.totalRevenue = '点击计算得出';
+        this.futureValue = '点击计算得出';
       }
     };
     computed = {
-      disabled () {
-        return !(this.presentValue&&this.fixedTime&&this.expectInterest);
+      disabled() {
+        return !(this.presentValue && this.fixedTime && this.expectInterest);
       }
     };
-}
+    onShareAppMessage(res){
+      if (res.from === 'button') {
+        console.log(res.target)
+      }
+      return {
+        title: '极简复利计算器',
+        path: '/pages/compound'
+      }
+    }
+  }
 </script>
 
