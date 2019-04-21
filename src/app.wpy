@@ -32,8 +32,8 @@ import wepy from 'wepy'
 export default class extends wepy.app {
   config = {
     pages: [
-      'pages/index',
       'pages/compound',
+      'pages/index',
     ],
     window: {
       navigationBarTitleText: '计算器',
@@ -53,15 +53,16 @@ export default class extends wepy.app {
       backgroundColor:'#FAFAFA',
       "list": [
         {
-          "pagePath": "pages/index",
-          "text": "定投计算",
-          iconPath:'./images/moreMoney.png',
-          selectedIconPath:'./images/moreMoneySelect.png'
-        },{
           "pagePath": "pages/compound",
           "text": "复利计算",
           iconPath:'./images/oneMoney.png',
           selectedIconPath:'./images/oneMoneySelect.png'
+        },
+        {
+          "pagePath": "pages/index",
+          "text": "定投计算",
+          iconPath:'./images/moreMoney.png',
+          selectedIconPath:'./images/moreMoneySelect.png'
         }
       ]
     },
