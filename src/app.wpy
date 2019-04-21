@@ -9,6 +9,20 @@
     justify-content: space-between;
     box-sizing: border-box;
   }
+
+  page{
+    background-color: #f7f7f7;
+  }
+  .text-primary{
+    color: #09bb07 !important;
+  }
+
+  .fixed-bottom {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
 </style>
 
 <script>
@@ -19,14 +33,39 @@ import 'wepy-async-function'
 export default class extends wepy.app {
   config = {
     pages: [
-      'pages/index'
+      'pages/index',
+      'pages/compound',
     ],
     window: {
-      backgroundTextStyle: 'light',
-      navigationBarBackgroundColor: '#fff',
-      navigationBarTitleText: 'WeChat',
-      navigationBarTextStyle: 'black'
-    }
+      navigationBarTitleText: '计算器',
+      navigationBarTextStyle: 'black',
+      navigationBarBackgroundColor:'#f7f7f7',
+      backgroundColor:'#f7f7f7'
+    },
+    "usingComponents": {
+      "van-button": "./components/vant/button/index",
+      "van-cell": "./components/vant/cell/index",
+      "van-cell-group": "./components/vant/cell-group/index",
+      "van-field": "./components/vant/field/index"
+    },
+    tabBar:{
+      color:'#353535',
+      selectedColor:'#09bb07',
+      backgroundColor:'#FAFAFA',
+      "list": [
+        {
+          "pagePath": "pages/index",
+          "text": "定投计算",
+          iconPath:'./images/moreMoney.png',
+          selectedIconPath:'./images/moreMoneySelect.png'
+        },{
+          "pagePath": "pages/compound",
+          "text": "复利计算",
+          iconPath:'./images/oneMoney.png',
+          selectedIconPath:'./images/oneMoneySelect.png'
+        }
+      ]
+    },
   }
 
   globalData = {

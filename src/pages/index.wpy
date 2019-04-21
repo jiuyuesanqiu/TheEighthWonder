@@ -1,20 +1,6 @@
-<style>
-  .fixed-bottom {
-    position: fixed;
-    right: 0;
-    bottom: 0;
-    left: 0;
-  }
-  page{
-    background-color: #f7f7f7;
-  }
-  .text-primary{
-    color: #09bb07 !important;
-  }
-</style>
 <template>
   <view>
-    <view class="mt-2">
+    <view>
       <van-cell-group>
         <picker bindchange="bindPickerChange" value="{{index}}" range="{{columns}}">
           <van-cell
@@ -108,21 +94,13 @@
   export default class MyPage extends wepy.page {
     config = {
       navigationBarTitleText:'定投计算器',
-      "usingComponents": {
-        "van-button": "../components/vant/button/index",
-        "van-cell": "../components/vant/cell/index",
-        "van-cell-group": "../components/vant/cell-group/index",
-        "van-field": "../components/vant/field/index"
-      },
-      navigationBarBackgroundColor:'#f7f7f7',
-      backgroundColor:'#f7f7f7'
     };
 
     data = {
-      fixedMoney:500,
-      fixedTime:20,
+      fixedMoney:'',
+      fixedTime:'',
       unit:'每月',
-      expectInterest:15,
+      expectInterest:'',
       columns:['每月','每周'],
       principal:"点击计算得出",
       totalRevenue:"点击计算得出",
