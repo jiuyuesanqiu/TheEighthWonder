@@ -17,6 +17,7 @@
   "author": "liuliang",
   "license": "MIT",
   "dependencies": {
+    "financejs": "^4.1.0",
     "vant-weapp": "^0.5.10",
     "wepy": "^1.6.0",
     "wepy-async-function": "^1.4.4",

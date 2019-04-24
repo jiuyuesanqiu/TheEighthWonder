@@ -1,0 +1,151 @@
+<template>
+    <view>
+        <van-cell-group>
+            <van-field
+                value="{{ instalmentAmount }}"
+                @input="onInstalmentAmountInput"
+                required
+                clearable
+                label="分期金额"
+                maxlength="10"
+                type="number"
+                input-align="right"
+                use-icon-slot
+                size="large"
+                placeholder="请输入分期金额"
+            >
+                <view slot="icon">元</view>
+            </van-field>
+            <van-field
+                value="{{ periods }}"
+                @input="onPeriodsInput"
+                required
+                clearable
+                label="期数"
+                maxlength="10"
+                type="number"
+                input-align="right"
+                use-icon-slot
+                size="large"
+                placeholder="请输入期数"
+            >
+                <view slot="icon">期</view>
+            </van-field>
+            <van-field
+                value="{{ repayment }}"
+                @input="onRepaymentInput"
+                required
+                clearable
+                label="每期还款"
+                maxlength="10"
+                type="number"
+                input-align="right"
+                use-icon-slot
+                size="large"
+                placeholder="请输入每期还款"
+            >
+                <view slot="icon">元</view>
+            </van-field>
+        </van-cell-group>
+        <view class="mt-5">
+            <van-cell-group>
+                <van-cell title="年化利率" value="{{revenue}}" size="large" value-class="value-class"></van-cell>
+            </van-cell-group>
+        </view>
+        <view class="mx-3 mt-5">
+            <button class="weui-btn" type="primary" disabled="{{disabled}}" @tap="calculate">计算</button>
+            <button class="weui-btn text-primary" type="default" @tap="reset">复位</button>
+        </view>
+    </view>
+</template>
+<script>
+import wepy from 'wepy';
+const Finance = require('financejs');
+const finance = new Finance();
+
+export default class Installment extends wepy.page {
+  config = {
+    navigationBarTitleText: '分期利率计算'
+  };
+  data = {
+    instalmentAmount: '',
+    periods: '',
+    repayment: '',
+    revenue: '点击计算得出'
+  };
+
+  computed = {
+    disabled() {
+      return !(this.instalmentAmount>0 && this.periods>0 && this.repayment>0);
+    }
+  };
+
+  methods = {
+    onPeriodsInput(e) {
+      this.periods = e.detail;
+    },
+    onRepaymentInput(e) {
+      this.repayment = e.detail;
+    },
+    onInstalmentAmountInput(e) {
+      this.instalmentAmount = e.detail;
+    },
+    calculate(){
+        // let arr = new Array(Number(this.periods)).fill(this.repayment);
+        // this.revenue = finance.IRR(0-this.instalmentAmount,...arr)*12+'%';
+        try {
+            this.revenue = this.irr(this.instalmentAmount,this.periods,this.repayment)
+        } catch (err) {
+            wx.showToast({
+                title: err.message,
+                icon: 'none'
+            });
+        }
+    },
+    reset() {
+      this.instalmentAmount = '';
+      this.periods = '';
+      this.repayment = '';
+      this.revenue = '点击计算得出';
+    }
+  };
+  irr(debitAmount,nper,eachPayment){
+    if(eachPayment<=0){
+      throw new Error('每期还款必须大于0');
+    }
+    function isIrr(rrate){
+      let amount = 0;
+      for(let i = 1;i<Number(nper)+1;i++){
+        amount += eachPayment/rrate**i;
+      }
+      return debitAmount-amount>0?true:false;
+    }
+    let rrate = nper*eachPayment/debitAmount;
+    let incre = Math.abs(rrate);
+
+    while(true){
+      while(!isIrr(rrate)){
+        rrate += incre;
+      }
+      if(incre<0.00001){
+        break;
+      }
+      rrate -= incre;
+      incre *= 1/2;
+    }
+    if(rrate<1){
+        throw new Error('输入错误');
+    }
+    return ((rrate-1)*100*12).toFixed(2)+'%';
+  }
+  onShareAppMessage(res) {
+    if (res.from === 'button') {
+      console.log(res.target);
+    }
+    return {
+      title: '分期利率计算器',
+      path: '/pages/installment'
+    };
+  }
+}
+</script>

@@ -32,8 +32,10 @@ import wepy from 'wepy'
 export default class extends wepy.app {
   config = {
     pages: [
+      'pages/more',
       'pages/compound',
       'pages/index',
+      'pages/installment',
     ],
     window: {
       navigationBarTitleText: '计算器',
@@ -41,7 +43,7 @@ export default class extends wepy.app {
       navigationBarBackgroundColor:'#f7f7f7',
       backgroundColor:'#f7f7f7'
     },
-    "usingComponents": {
+    usingComponents: {
       "van-button": "./components/vant/button/index",
       "van-cell": "./components/vant/cell/index",
       "van-cell-group": "./components/vant/cell-group/index",
@@ -51,18 +53,23 @@ export default class extends wepy.app {
       color:'#353535',
       selectedColor:'#09bb07',
       backgroundColor:'#FAFAFA',
-      "list": [
+      list: [
         {
-          "pagePath": "pages/compound",
-          "text": "复利计算",
+          pagePath: "pages/compound",
+          text: "复利计算",
           iconPath:'./images/oneMoney.png',
           selectedIconPath:'./images/oneMoneySelect.png'
         },
         {
-          "pagePath": "pages/index",
-          "text": "定投计算",
+          pagePath: "pages/index",
+          text: "定投计算",
           iconPath:'./images/moreMoney.png',
           selectedIconPath:'./images/moreMoneySelect.png'
+        },{
+          pagePath: "pages/more",
+          text: "更多",
+          iconPath:'./images/more.png',
+          selectedIconPath:'./images/moreSelect.png'
         }
       ]
     },

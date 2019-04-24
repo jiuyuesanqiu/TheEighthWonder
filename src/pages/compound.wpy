@@ -1,143 +1,138 @@
 <template>
-  <van-cell-group>
-    <van-field
-      value="{{ presentValue }}"
-      @input="onPresentValueInput"
-      required
-      clearable
-      label="初始本金"
-      maxlength="10"
-      type="number"
-      input-align="right"
-      use-icon-slot
-      size="large"
-      placeholder="请输入本金">
-      <view slot="icon">
-        元
-      </view>
-    </van-field>
-    <van-field
-      value="{{ fixedTime }}"
-      required
-      clearable
-      label="投资年限"
-      maxlength="3"
-      type="number"
-      input-align="right"
-      @input="onFixedTimeInput"
-      use-icon-slot
-      size="large"
-      placeholder="打算投资多久">
-      <view slot="icon">
-        年
-      </view>
-    </van-field>
-    <van-field
-      value="{{ expectInterest }}"
-      required
-      clearable
-      @input="onExpectInterestInput"
-      label="年化收益率"
-      maxlength="3"
-      type="number"
-      input-align="right"
-      use-icon-slot
-      size="large"
-      placeholder="预期年化收益率">
-      <view slot="icon">
-        %
-      </view>
-    </van-field>
-  </van-cell-group>
-  <view class="mt-5">
+  <view>
     <van-cell-group>
-      <van-cell
-        title="总利息"
-        value="{{totalRevenue}}"
+      <van-field
+        value="{{ presentValue }}"
+        @input="onPresentValueInput"
+        required
+        clearable
+        label="初始本金"
+        maxlength="10"
+        type="number"
+        input-align="right"
+        use-icon-slot
         size="large"
-        value-class="value-class">
-      </van-cell>
-      <van-cell
-        title="本息和"
-        value="{{futureValue}}"
+        placeholder="请输入本金"
+      >
+        <view slot="icon">元</view>
+      </van-field>
+      <van-field
+        value="{{ fixedTime }}"
+        required
+        clearable
+        label="投资年限"
+        maxlength="3"
+        type="number"
+        input-align="right"
+        @input="onFixedTimeInput"
+        use-icon-slot
         size="large"
-        value-class="value-class">
-      </van-cell>
+        placeholder="打算投资多久"
+      >
+        <view slot="icon">年</view>
+      </van-field>
+      <van-field
+        value="{{ expectInterest }}"
+        required
+        clearable
+        @input="onExpectInterestInput"
+        label="年化收益率"
+        maxlength="3"
+        type="number"
+        input-align="right"
+        use-icon-slot
+        size="large"
+        placeholder="预期年化收益率"
+      >
+        <view slot="icon">%</view>
+      </van-field>
     </van-cell-group>
-  </view>
-  <view class="mx-3 mt-5">
-    <button class="weui-btn" type="primary" disabled="{{disabled}}" @tap="calculate">计算</button>
-    <button class="weui-btn text-primary" type="default" @tap="reset">复位</button>
+    <view class="mt-5">
+      <van-cell-group>
+        <van-cell title="总利息" value="{{totalRevenue}}" size="large" value-class="value-class"></van-cell>
+        <van-cell title="本息和" value="{{futureValue}}" size="large" value-class="value-class"></van-cell>
+      </van-cell-group>
+    </view>
+    <view class="mx-3 mt-5">
+      <button class="weui-btn" type="primary" disabled="{{disabled}}" @tap="calculate">计算</button>
+      <button class="weui-btn text-primary" type="default" @tap="reset">复位</button>
+    </view>
   </view>
 </template>
 <script>
-  import wepy from 'wepy';
+import wepy from 'wepy';
 
-  export default class Compound extends wepy.page {
-    config = {
-      navigationBarTitleText: '复利计算器',
-      navigationBarBackgroundColor: '#f7f7f7',
-      backgroundColor: '#f7f7f7'
-    };
-    data = {
-      presentValue: '',
-      fixedTime: '',
-      expectInterest: '',
-      totalRevenue: '点击计算得出',
-      futureValue: '点击计算得出'
-    };
+export default class Compound extends wepy.page {
+  config = {
+    navigationBarTitleText: '复利计算器',
+  };
+  data = {
+    presentValue: '',
+    fixedTime: '',
+    expectInterest: '',
+    totalRevenue: '点击计算得出',
+    futureValue: '点击计算得出'
+  };
 
-    toThousand(num) {
-      return (num || 0).toString().replace(/(\d)(?=(?:\d{3})+$)/g, '$1,');
-    };
-
-    dealNumber(str) {
-      if (str.indexOf('.') !== -1) {
-        return str.replace(str.substring(str.indexOf('.') + 3, str.indexOf('e')), '');
-      } else if (str.indexOf('Infinity') !== -1) {
-        return '天文数字，无法计算';
-      }
-      return str;
-    }
-
-    methods = {
-      onPresentValueInput(e) {
-        this.presentValue = e.detail;
-      },
-      onFixedTimeInput(e) {
-        this.fixedTime = e.detail;
-      },
-      onExpectInterestInput(e) {
-        this.expectInterest = e.detail;
-      },
-      calculate() {
-        let tempFutureValue = Math.trunc(this.presentValue * (1 + this.expectInterest / 100) ** this.fixedTime);
-        console.log(tempFutureValue);
-        this.futureValue = this.dealNumber(this.toThousand(tempFutureValue) + '元');
-        this.totalRevenue = this.dealNumber(this.toThousand(tempFutureValue - this.presentValue) + '元');
-      },
-      reset() {
-        this.presentValue = '';
-        this.fixedTime = '';
-        this.expectInterest = '';
-        this.totalRevenue = '点击计算得出';
-        this.futureValue = '点击计算得出';
-      }
-    };
-    computed = {
-      disabled() {
-        return !(this.presentValue && this.fixedTime && this.expectInterest);
-      }
-    };
-    onShareAppMessage(res){
-      if (res.from === 'button') {
-        console.log(res.target)
-      }
-      return {
-        title: '极简复利计算器',
-        path: '/pages/compound'
-      }
-    }
+  toThousand(num) {
+    return (num || 0).toString().replace(/(\d)(?=(?:\d{3})+$)/g, '$1,');
   }
+
+  dealNumber(str) {
+    if (str.indexOf('.') !== -1) {
+      return str.replace(
+        str.substring(str.indexOf('.') + 3, str.indexOf('e')),
+        ''
+      );
+    } else if (str.indexOf('Infinity') !== -1) {
+      return '天文数字，无法计算';
+    }
+    return str;
+  }
+
+  methods = {
+    onPresentValueInput(e) {
+      this.presentValue = e.detail;
+    },
+    onFixedTimeInput(e) {
+      this.fixedTime = e.detail;
+    },
+    onExpectInterestInput(e) {
+      this.expectInterest = e.detail;
+    },
+    calculate() {
+      let tempFutureValue = Math.trunc(
+        this.presentValue * (1 + this.expectInterest / 100) ** this.fixedTime
+      );
+      this.futureValue = this.dealNumber(
+        this.toThousand(tempFutureValue) + '元'
+      );
+      this.totalRevenue = this.dealNumber(
+        this.toThousand(tempFutureValue - this.presentValue) + '元'
+      );
+    },
+    reset() {
+      this.presentValue = '';
+      this.fixedTime = '';
+      this.expectInterest = '';
+      this.totalRevenue = '点击计算得出';
+      this.futureValue = '点击计算得出';
+    }
+  };
+  computed = {
+    disabled() {
+      return !(this.presentValue && this.fixedTime && this.expectInterest);
+    }
+  };
+  onShareAppMessage(res) {
+    if (res.from === 'button') {
+      console.log(res.target);
+    }
+    return {
+      title: '极简复利计算器',
+      path: '/pages/compound'
+    };
+  }
+}
 </script>
 
