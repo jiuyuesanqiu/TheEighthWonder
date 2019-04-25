@@ -1,6 +1,7 @@
 <style lang="less">
   @import "weui.wxss";
   @import "bootstrap.wxss";
+  @import "./components/vant/common/index.wxss";
   .container {
     height: 100%;
     display: flex;
@@ -12,6 +13,7 @@
 
   page{
     background-color: #f7f7f7;
+    font-size: 36rpx;
   }
   .text-primary{
     color: #09bb07 !important;
@@ -23,6 +25,7 @@
     bottom: 0;
     left: 0;
   }
+  
 </style>
 
 <script>
@@ -47,7 +50,9 @@ export default class extends wepy.app {
       "van-button": "./components/vant/button/index",
       "van-cell": "./components/vant/cell/index",
       "van-cell-group": "./components/vant/cell-group/index",
-      "van-field": "./components/vant/field/index"
+      "van-field": "./components/vant/field/index",
+      "van-icon": "./components/vant/icon/index",
+      "fuli-cell": "./components/customer/cell/index",
     },
     tabBar:{
       color:'#353535',

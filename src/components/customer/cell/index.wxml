@@ -1,0 +1,13 @@
+<navigator url="{{url}}" class="fuli-cell" hover-class="fuli-cell-active">
+    <view class="d-flex">
+      <view class="fuli-cell-left d-flex align-items-center">
+        <image class="fuli-cell-icon" src="{{icon}}"></image>
+      </view>
+      <view class="fuli-cell-right van-hairline--bottom flex-grow-1 d-flex">
+        <view class="flex-grow-1">
+          <text>{{title}}</text>
+        </view>
+        <van-icon name="arrow" color="#888888" class="d-flex align-items-center"></van-icon>
+      </view>
+    </view>
+  </navigator>

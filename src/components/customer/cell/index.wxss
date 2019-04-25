@@ -1,0 +1,21 @@
+@import "../../../weui.wxss";
+@import "../../../bootstrap.wxss";
+
+.fuli-cell {
+  background: white;
+  color: #353535;
+}
+.fuli-cell-left {
+  padding: 31rpx 36rpx;
+}
+.fuli-cell-right {
+  font-size: 36rpx;
+  padding: 31rpx 26rpx 31rpx 0;
+}
+.fuli-cell-icon {
+  width: 40rpx;
+  height: 40rpx;
+}
+.fuli-cell-active{
+  background-color: #e5e5e5;
+}

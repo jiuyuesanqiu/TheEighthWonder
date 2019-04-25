@@ -1,57 +1,40 @@
 <style>
-.good {
-  border: 1px solid red;
-  height: 56px;
+.fuli-cell {
+  background: white;
+  color: #353535;
 }
-.good1 {
-  border: 1px solid red;
-  height: 112rpx;
+.fuli-cell-left {
+  padding: 31rpx 36rpx;
 }
-.fuli-cell{
-  padding: 36rpx
+.fuli-cell-right {
+  font-size: 36rpx;
+  padding: 31rpx 26rpx 31rpx 0;
+}
+.fuli-cell-icon {
+  width: 40rpx;
+  height: 40rpx;
+}
+.fuli-cell-active{
+  background-color: #e5e5e5;
 }
 </style>
 
 <template>
   <view>
-    <view>
-      <navigator
-        url=""
-        class="fuli-cell weui-cell_access"
-        hover-class="weui-cell_active"
-      >
-       <image
-          style="width: 40rpx; height: 40rpx;"
-          src="../images/more.png"
-        ></image>
-      </navigator>
-    </view>
-    <view class="weui-cells weui-cells_after-title">
-      <navigator
-        url=""
-        class="weui-cell weui-cell_access"
-        hover-class="weui-cell_active"
-      >
-        <view class="weui-cell__hd">
-          <image
-            src="../images/more.png"
-            style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"
-          ></image>
+    <!-- <fuli-cell url="./installment" title="分期利率计算" icon="/images/fq.png"></fuli-cell> -->
+    <navigator url="./installment" class="fuli-cell" hover-class="fuli-cell-active">
+      <view class="d-flex">
+        <view class="fuli-cell-left d-flex align-items-center">
+          <image class="fuli-cell-icon" src="../images/fq.png"></image>
         </view>
-        <view class="weui-cell__bd">分期利率计算</view>
-        <view class="weui-cell__ft weui-cell__ft_in-access"></view>
-      </navigator>
-      <navigator url class="weui-cell weui-cell_access" hover-class="weui-cell_active">
-        <view class="weui-cell__hd">
-          <image
-            src="../images/fenqi.png"
-            style="margin-right: 5px;vertical-align: middle;width:20px; height: 20px;"
-          ></image>
+        <view class="fuli-cell-right van-hairline--bottom flex-grow-1 d-flex">
+          <view class="flex-grow-1">
+            <text>分期利率计算</text>
+          </view>
+          <van-icon name="arrow" color="#888888" class="d-flex align-items-center"></van-icon>
         </view>
-        <view class="weui-cell__bd">给开发者留言</view>
-        <view class="weui-cell__ft weui-cell__ft_in-access"></view>
-      </navigator>
-    </view>
+      </view>
+    </navigator>
   </view>
 </template>
 <script>
@@ -65,7 +48,7 @@ export default class More extends wepy.page {
     if (res.from === 'button') {
       console.log(res.target);
     }
-    
+
     return {
       title: '极简复利计算器',
       path: '/pages/compound'
