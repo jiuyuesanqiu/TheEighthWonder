@@ -14,7 +14,7 @@
   width: 40rpx;
   height: 40rpx;
 }
-.fuli-cell-active{
+.fuli-cell-active {
   background-color: #e5e5e5;
 }
 </style>
