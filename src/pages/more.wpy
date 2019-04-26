@@ -53,7 +53,7 @@ button:after {
         </view>
         <view class="fuli-cell-right flex-grow-1 d-flex van-hairline--bottom">
           <view class="flex-grow-1">
-            <text>联系开发者</text>
+            <text>给开发者留言</text>
           </view>
           <van-icon name="arrow" color="#888888" class="d-flex align-items-center"></van-icon>
         </view>
