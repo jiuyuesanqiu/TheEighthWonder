@@ -110,6 +110,15 @@ export default class Compound extends wepy.page {
       this.totalRevenue = this.dealNumber(
         this.toThousand(tempFutureValue - this.presentValue) + '元'
       );
+
+      let seriesData = [];
+      let xAxisData = [];
+      for(let i = 1;i<this.fixedTime+1;i++){
+        seriesData.push(this.presentValue * (1 + this.expectInterest / 100) ** i);
+        xAxisData.push(i)
+      }
+      wx.setStorageSync("seriesData", seriesData);
+      wx.setStorageSync("xAxisData", xAxisData);
     },
     reset() {
       this.presentValue = '';

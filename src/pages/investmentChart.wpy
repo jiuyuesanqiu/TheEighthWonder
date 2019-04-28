@@ -3,28 +3,46 @@ ec-canvas {
   width: 100%;
   height: 100%;
 }
+.container {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
 </style>
 
 <template>
-    <view>
-        <ec-canvas id="mychart-dom-line" canvas-id="mychart-line" ec="{{ ec }}"></ec-canvas>
-    </view>
+  <view class="container">
+    <ec-canvas id="mychart-dom-line1" canvas-id="mychart-line1" ec="{{ ec1 }}"></ec-canvas>
+  </view>
 </template>
 <script>
 import wepy from 'wepy';
 import * as echarts from '../components/ec-canvas/echarts';
-
+let chart = {};
 export default class More extends wepy.page {
   config = {
     navigationBarTitleText: '投资明细',
     usingComponents: {
       'ec-canvas': '../components/ec-canvas/ec-canvas'
-    }
+    },
+    pageOrientation: 'auto'
   };
   data = {
     ec: {
       onInit: this.initChart
-    }
+    },
+    ec1: {
+      onInit: this.initChart1
+    },
+    chart: {}
   };
   onShareAppMessage(res) {
     if (res.from === 'button') {
@@ -38,72 +56,69 @@ export default class More extends wepy.page {
   }
 
   initChart(canvas, width, height) {
-    const chart = echarts.init(canvas, null, {
+    console.log(width, height);
+    chart = echarts.init(canvas, null, {
       width: width,
       height: height
     });
     canvas.setChart(chart);
 
     var option = {
-      title: {
-        text: '测试下面legend的红色区域不应被裁剪',
-        left: 'center'
-      },
-      color: ['#37A2DA', '#67E0E3', '#9FE6B8'],
-      legend: {
-        data: ['A', 'B', 'C'],
-        top: 50,
-        left: 'center',
-        backgroundColor: 'red',
-        z: 100
-      },
-      grid: {
-        containLabel: true
-      },
-      tooltip: {
-        show: true,
-        trigger: 'axis'
-      },
       xAxis: {
         type: 'category',
-        boundaryGap: false,
-        data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
-        // show: false
+        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
       },
       yAxis: {
-        x: 'center',
-        type: 'value',
-        splitLine: {
-          lineStyle: {
-            type: 'dashed'
-          }
-        }
-        // show: false
+        type: 'value'
       },
       series: [
         {
-          name: 'A',
-          type: 'line',
-          smooth: true,
-          data: [18, 36, 65, 30, 78, 40, 33]
-        },
-        {
-          name: 'B',
-          type: 'line',
-          smooth: true,
-          data: [12, 50, 51, 35, 70, 30, 20]
-        },
-        {
-          name: 'C',
-          type: 'line',
-          smooth: true,
-          data: [10, 30, 31, 50, 40, 20, 10]
+          data: [820, 932, 901, 934, 1290, 1330, 1320],
+          type: 'line'
         }
       ]
     };
 
     chart.setOption(option);
     return chart;
+  }
+  initChart1(canvas, width, height) {
+    chart = echarts.init(canvas, null, {
+      width: width,
+      height: height
+    });
+    canvas.setChart(chart);
+
+
+    let seriesData = [];
+    let xAxisData = [];
+    for(let i = 1;i<35+1;i++){
+      seriesData.push(10000 * (1.1 ** i));
+      xAxisData.push(i)
+    }
+
+    var option = {
+      xAxis: {
+        type: 'category',
+        data: xAxisData
+      },
+      yAxis: {
+        type: 'value'
+      },
+      series: [
+        {
+          data: seriesData,
+          type: 'line',
+          smooth: true
+        }
+      ]
+    };
+
+    chart.setOption(option);
+    return chart;
+  }
+  onResize(res) {
+    chart.resize(res.size.windowHeight, res.size.windowWidth);
   }
 }
 </script>
