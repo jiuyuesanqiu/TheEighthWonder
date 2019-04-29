@@ -1,0 +1,103 @@
+<style>
+</style>
+
+<template>
+    <view></view>
+</template>
+<script>
+import wepy from 'wepy';
+
+export default class HouseModel extends wepy.page {
+  config = {
+    navigationBarTitleText: '房屋投资模型'
+  };
+  onShareAppMessage(res) {
+    if (res.from === 'button') {
+      console.log(res.target);
+    }
+
+    return {
+      title: '房屋价值估算模型',
+      path: '/pages/compound'
+    };
+  }
+
+  methods = {
+    computed() {
+      //首付比例
+      let payment = 3;
+      //成交价格
+      let dealPrice = 1500000;
+      //税费
+      let expenses = 100000;
+      //中介费
+      let agency = 30000;
+      //装修金额
+      let fitment = 100000;
+      //贷款期限
+      let m = 20 * 12;
+      //租金
+      let rent = 3000;
+      //月利率
+      let b = 4.9 / 100 / 12;
+      //预期房价年涨幅
+      let houseRise = 7 / 100;
+      //预期租金年涨幅
+      let rentRise = 0.05;
+      //预期卖房时间
+      let expectSell = 5;
+      //贷款金额
+      let loanAmount = dealPrice * (1 - payment / 10);
+      //首付款
+      let initialPay = dealPrice * (1 - (10 - payment) / 10);
+      //每月还款
+      let monthPay = (loanAmount * b * (1 + b) ** m) / ((1 + b) ** m - 1);
+      //每月利息
+      let mothInterests = [];
+      //每月剩余本金
+      let mothSurplusPrincipal = [];
+      let surplusPrincipal = loanAmount;
+      for (let i = 0; i < m; i++) {
+        let mothInterest = surplusPrincipal * b;
+        mothInterests.push(mothInterest);
+        surplusPrincipal -= monthPay - mothInterest;
+        mothSurplusPrincipal.push(surplusPrincipal);
+      }
+      //预期投资其它产品年利率
+      let expectInterest = 15 / 100;
+      //计算月利率
+      let x = Math.pow(1 + expectInterest, 1 / 12);
+      //到卖房时每月还款的本息和
+      let amount = Math.floor(
+        (monthPay * x * (x ** (expectSell * 12) - 1)) / (x - 1)
+      );
+      //计算到卖房时期间的本金和
+      let principalAcount = 0;
+      for (let i = 0; i < expectSell * 12; i++) {
+        principalAcount += monthPay - mothInterests[i];
+      }
+      //持有期间月供中利息的损失
+      let rentDamage = amount - principalAcount;
+      //持有期间租金得到的金额
+      let rentAmount = Math.floor(
+        (rent * x * (Math.pow(x, expectSell * 12) - 1)) / (x - 1)
+      );
+      //持有期间共损失金额
+      let damage = rentDamage - rentAmount;
+      //卖房时的价格
+      let sellPrice = dealPrice * (1 + houseRise) ** expectSell;
+      console.log('卖房价格', Math.floor(sellPrice));
+      //赚到的钱
+      let makeMoney =
+        sellPrice + damage - mothSurplusPrincipal[expectSell * 12 - 1];
+      //总投资
+      let total = expenses + fitment + initialPay + agency;
+      //总投资回报率
+      let investment = makeMoney / total;
+      //年化回报率
+      let annualized = Math.pow(investment, 1 / expectSell) - 1;
+      console.log('年化投资回报率', annualized);
+    }
+  };
+}
+</script>

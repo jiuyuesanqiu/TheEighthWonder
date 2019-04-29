@@ -15,12 +15,12 @@ ec-canvas {
   align-items: center;
   justify-content: space-between;
   box-sizing: border-box;
-}
+} 
 </style>
 
 <template>
   <view class="container">
-    <ec-canvas id="mychart-dom-line1" canvas-id="mychart-line1" ec="{{ ec1 }}"></ec-canvas>
+    <ec-canvas id="mychart-dom-line" canvas-id="mychart-line" ec="{{ ec }}"></ec-canvas>
   </view>
 </template>
 <script>
@@ -39,9 +39,6 @@ export default class More extends wepy.page {
     ec: {
       onInit: this.initChart
     },
-    ec1: {
-      onInit: this.initChart1
-    },
     chart: {}
   };
   onShareAppMessage(res) {
@@ -56,33 +53,6 @@ export default class More extends wepy.page {
   }
 
   initChart(canvas, width, height) {
-    console.log(width, height);
-    chart = echarts.init(canvas, null, {
-      width: width,
-      height: height
-    });
-    canvas.setChart(chart);
-
-    var option = {
-      xAxis: {
-        type: 'category',
-        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-      },
-      yAxis: {
-        type: 'value'
-      },
-      series: [
-        {
-          data: [820, 932, 901, 934, 1290, 1330, 1320],
-          type: 'line'
-        }
-      ]
-    };
-
-    chart.setOption(option);
-    return chart;
-  }
-  initChart1(canvas, width, height) {
     chart = echarts.init(canvas, null, {
       width: width,
       height: height
@@ -93,17 +63,49 @@ export default class More extends wepy.page {
     let seriesData = [];
     let xAxisData = [];
     for(let i = 1;i<35+1;i++){
-      seriesData.push(10000 * (1.1 ** i));
+      seriesData.push(Math.floor(1300000 * (1.1 ** i)));
       xAxisData.push(i)
     }
 
     var option = {
+      tooltip : {
+        trigger: 'axis',
+        axisPointer: {
+            type: 'cross',
+            label: {
+                backgroundColor: '#6a7985'
+            }
+        },
+        position: [10, 10]
+    },
       xAxis: {
         type: 'category',
         data: xAxisData
       },
       yAxis: {
-        type: 'value'
+        type: 'value',
+        splitLine:{
+          show:false
+        },
+        axisLabel:{
+          formatter(value,index){
+            if(value>100000000){
+              return Math.floor(value/100000000)+'B'
+            }
+            if(value>1000000){
+              return Math.floor(value/1000000)+'M'
+            }
+            if(value>10000){
+              return Math.floor(value/10000)+'W'
+            }
+            if(value>1000){
+              return Math.floor(value/1000)+'K'
+            }
+          }
+        }
+      },
+      grid:{
+        // left:'15%'
       },
       series: [
         {
@@ -111,7 +113,7 @@ export default class More extends wepy.page {
           type: 'line',
           smooth: true
         }
-      ]
+      ],
     };
 
     chart.setOption(option);
