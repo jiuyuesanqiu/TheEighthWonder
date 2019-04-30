@@ -36,11 +36,11 @@ export default class extends wepy.app {
   config = {
     pages: [
       'pages/houseModel',
-      'pages/investmentChart',
       'pages/compound',
       'pages/index',
       'pages/installment',
       'pages/more',
+      'pages/investmentChart',
     ],
     window: {
       navigationBarTitleText: '计算器',
@@ -54,7 +54,9 @@ export default class extends wepy.app {
       "van-cell-group": "./components/vant/cell-group/index",
       "van-field": "./components/vant/field/index",
       "van-icon": "./components/vant/icon/index",
+      "van-panel": "./components/vant/panel/index",
       "fuli-cell": "./components/customer/cell/index",
+      "i-panel": "./components/i-view/panel/index"
     },
     tabBar:{
       color:'#353535',
