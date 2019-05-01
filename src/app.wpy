@@ -35,12 +35,12 @@ import wepy from 'wepy'
 export default class extends wepy.app {
   config = {
     pages: [
-      'pages/houseModel',
       'pages/compound',
       'pages/index',
       'pages/installment',
       'pages/more',
       'pages/investmentChart',
+      'pages/houseModel',
     ],
     window: {
       navigationBarTitleText: '计算器',
