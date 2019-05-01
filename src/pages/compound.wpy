@@ -51,6 +51,7 @@
       <van-cell-group>
         <van-cell title="总利息" value="{{totalRevenue}}" size="large" value-class="value-class"></van-cell>
         <van-cell title="本息和" value="{{futureValue}}" size="large" value-class="value-class"></van-cell>
+        <van-cell title="查看图表" @tap="lookChart" size="large" value-class="value-class" is-link></van-cell>
       </van-cell-group>
     </view>
     <view class="mx-3 mt-5">
@@ -113,12 +114,24 @@ export default class Compound extends wepy.page {
 
       let seriesData = [];
       let xAxisData = [];
-      for(let i = 1;i<this.fixedTime+1;i++){
-        seriesData.push(this.presentValue * (1 + this.expectInterest / 100) ** i);
+      for(let i = 0;i<Number(this.fixedTime)+1;i++){
+        seriesData.push(Math.floor(this.presentValue * (1 + this.expectInterest / 100) ** i));
         xAxisData.push(i)
       }
       wx.setStorageSync("seriesData", seriesData);
       wx.setStorageSync("xAxisData", xAxisData);
+    },
+    lookChart(){
+      if (this.totalRevenue === '点击计算得出'){
+        wx.showToast({
+          title: '计算后得出',
+          icon: 'none'
+        });
+        return;
+      }
+      wx.navigateTo({
+        url: './investmentChart'
+      })
     },
     reset() {
       this.presentValue = '';

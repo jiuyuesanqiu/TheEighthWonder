@@ -32,6 +32,7 @@ button:after {
 
 <template>
   <view>
+    <guide wx:if="{{showGuide}}"></guide>
     <!-- <fuli-cell url="./installment" title="分期利率计算" icon="/images/fq.png"></fuli-cell> -->
     <navigator url="./installment" class="fuli-cell" hover-class="fuli-cell-active">
       <view class="d-flex">
@@ -46,21 +47,21 @@ button:after {
         </view>
       </view>
     </navigator>
-    <navigator url="./houseModel" class="fuli-cell" hover-class="fuli-cell-active">
+    <!--<navigator url="./houseModel" class="fuli-cell" hover-class="fuli-cell-active">
       <view class="d-flex">
         <view class="fuli-cell-left d-flex align-items-center">
           <image class="fuli-cell-icon" src="../images/home.png"></image>
         </view>
-        <view class="fuli-cell-right van-hairline--bottom flex-grow-1 d-flex">
+        <view class="fuli-cell-right van-hairline&#45;&#45;bottom flex-grow-1 d-flex">
           <view class="flex-grow-1">
             <text>二手房投资估算</text>
           </view>
           <van-icon name="arrow" color="#888888" class="d-flex align-items-center"></van-icon>
         </view>
       </view>
-    </navigator>
+    </navigator>-->
     <button open-type="contact">
-      <view class="d-flex fuli-cell">
+      <view class="d-flex fuli-cell" hover-class="fuli-cell-active">
         <view class="fuli-cell-left d-flex align-items-center">
           <image class="fuli-cell-icon" src="../images/service.png"></image>
         </view>
@@ -72,7 +73,7 @@ button:after {
         </view>
       </view>
     </button>
-    <view class="d-flex fuli-cell van-hairline--bottom">
+    <view class="d-flex fuli-cell van-hairline--bottom" hover-class="fuli-cell-active" @tap="tipAttention">
       <view class="fuli-cell-left d-flex align-items-center">
         <image class="fuli-cell-icon" src="../images/expect.png"></image>
       </view>
@@ -80,12 +81,14 @@ button:after {
         <view class="flex-grow-1">
           <text>更多功能敬请期待</text>
         </view>
+        <van-icon name="arrow" color="#888888" class="d-flex align-items-center"></van-icon>
       </view>
     </view>
   </view>
 </template>
 <script>
 import wepy from 'wepy';
+import guide from '../components/guide';
 
 export default class More extends wepy.page {
   config = {
@@ -100,6 +103,23 @@ export default class More extends wepy.page {
       title: '极简复利计算器',
       path: '/pages/compound'
     };
+  }
+  data={
+    showGuide:false
+  }
+
+  methods={
+    tipAttention(){
+      this.showGuide = true;
+      setTimeout(() => {
+        this.showGuide = false;
+        this.$apply()
+      }, 4000)
+    }
+  }
+
+  components = {
+    guide
   }
 }
 </script>

@@ -1,21 +1,22 @@
 <style>
-ec-canvas {
-  width: 100%;
-  height: 100%;
-}
-.container {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  ec-canvas {
+    width: 100%;
+    height: 100%;
+  }
 
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  box-sizing: border-box;
-} 
+  .container {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box;
+  }
 </style>
 
 <template>
@@ -24,103 +25,108 @@ ec-canvas {
   </view>
 </template>
 <script>
-import wepy from 'wepy';
-import * as echarts from '../components/ec-canvas/echarts';
-let chart = {};
-export default class More extends wepy.page {
-  config = {
-    navigationBarTitleText: '投资明细',
-    usingComponents: {
-      'ec-canvas': '../components/ec-canvas/ec-canvas'
-    },
-    pageOrientation: 'auto'
-  };
-  data = {
-    ec: {
-      onInit: this.initChart
-    },
-    chart: {}
-  };
-  onShareAppMessage(res) {
-    if (res.from === 'button') {
-      console.log(res.target);
-    }
+  import wepy from 'wepy';
+  import * as echarts from '../components/ec-canvas/echarts';
 
-    return {
-      title: '极简复利计算器',
-      path: '/pages/compound'
+  let chart = {};
+  export default class More extends wepy.page {
+    config = {
+      navigationBarTitleText: '投资明细',
+      usingComponents: {
+        'ec-canvas': '../components/ec-canvas/ec-canvas'
+      }
     };
-  }
+    data = {
+      ec: {
+        onInit: this.initChart
+      },
+      chart: {}
+    };
 
-  initChart(canvas, width, height) {
-    chart = echarts.init(canvas, null, {
-      width: width,
-      height: height
-    });
-    canvas.setChart(chart);
+    onShareAppMessage(res) {
+      if (res.from === 'button') {
+        console.log(res.target);
+      }
 
-
-    let seriesData = [];
-    let xAxisData = [];
-    for(let i = 1;i<35+1;i++){
-      seriesData.push(Math.floor(1300000 * (1.1 ** i)));
-      xAxisData.push(i)
+      return {
+        title: '极简复利计算器',
+        path: '/pages/compound'
+      };
     }
 
-    var option = {
-      tooltip : {
-        trigger: 'axis',
-        axisPointer: {
-            type: 'cross',
+    initChart(canvas, width, height) {
+      chart = echarts.init(canvas, null, {
+        width: width,
+        height: height
+      });
+      canvas.setChart(chart);
+
+
+      let seriesData = wx.getStorageSync('seriesData');
+      let xAxisData = wx.getStorageSync('xAxisData');
+
+      var option = {
+        legend: {
+          y: 'top',
+          data: ['北京', '上海', '广州'],
+          textStyle: {
+            color: '#fff',
+            fontSize: 16
+          }
+        },
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'line',
             label: {
-                backgroundColor: '#6a7985'
+              backgroundColor: '#6a7985'
             }
+          },
+          position: [60, 60]
         },
-        position: [10, 10]
-    },
-      xAxis: {
-        type: 'category',
-        data: xAxisData
-      },
-      yAxis: {
-        type: 'value',
-        splitLine:{
-          show:false
+        xAxis: {
+          name:'年',
+          type: 'category',
+          data: xAxisData
         },
-        axisLabel:{
-          formatter(value,index){
-            if(value>100000000){
-              return Math.floor(value/100000000)+'B'
-            }
-            if(value>1000000){
-              return Math.floor(value/1000000)+'M'
-            }
-            if(value>10000){
-              return Math.floor(value/10000)+'W'
-            }
-            if(value>1000){
-              return Math.floor(value/1000)+'K'
+        yAxis: {
+          name:'本息和',
+          type: 'value',
+          splitLine: {
+            show: false
+          },
+          axisLabel: {
+            formatter(value, index) {
+              console.log(value, index);
+              if (value > 100000000) {
+                return value / 100000000 + 'B';
+              }
+              if (value > 1000000) {
+                return value / 1000000 + 'M';
+              }
+              if (value > 10000) {
+                return value / 10000 + 'W';
+              }
+              if (value > 1000) {
+                return value / 1000 + 'K';
+              }
             }
           }
-        }
-      },
-      grid:{
-        // left:'15%'
-      },
-      series: [
-        {
-          data: seriesData,
-          type: 'line',
-          smooth: true
-        }
-      ],
-    };
+        },
+        grid: {
+          left:'13%'
+        },
+        series: [
+          {
+            data: seriesData,
+            type: 'line',
+            smooth: true
+          }
+        ]
+      };
 
-    chart.setOption(option);
-    return chart;
+      chart.setOption(option);
+      return chart;
+    }
   }
-  onResize(res) {
-    chart.resize(res.size.windowHeight, res.size.windowWidth);
-  }
-}
 </script>
