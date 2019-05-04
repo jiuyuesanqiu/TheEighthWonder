@@ -1,13 +1,21 @@
-<navigator url="{{url}}" class="fuli-cell" hover-class="fuli-cell-active">
-    <view class="d-flex">
-      <view class="fuli-cell-left d-flex align-items-center">
-        <image class="fuli-cell-icon" src="{{icon}}"></image>
-      </view>
-      <view class="fuli-cell-right van-hairline--bottom flex-grow-1 d-flex">
-        <view class="flex-grow-1">
-          <text>{{title}}</text>
-        </view>
-        <van-icon name="arrow" color="#888888" class="d-flex align-items-center"></van-icon>
-      </view>
+<wxs module="util">
+  var hairline = "van-hairline--bottom";
+  function hasBorder(border){
+    if(border){
+      return hairline;
+    }
+  }
+  module.exports = { hasBorder : hasBorder}
+</wxs>
+
+<view class="d-flex fuli-cell" hover-class="fuli-cell-active" bind:tap="onClick">
+  <view class="fuli-cell-left d-flex align-items-center">
+    <image class="fuli-cell-icon" src="{{icon}}"></image>
+  </view>
+  <view class="fuli-cell-right flex-grow-1 d-flex {{util.hasBorder(border)}}">
+    <view class="flex-grow-1">
+      <text>{{title}}</text>
     </view>
-  </navigator>
+    <van-icon name="arrow" color="#888888" class="d-flex align-items-center"></van-icon>
+  </view>
+</view>

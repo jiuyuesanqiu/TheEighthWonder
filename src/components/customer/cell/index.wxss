@@ -1,6 +1,6 @@
 @import "../../../weui.wxss";
 @import "../../../bootstrap.wxss";
-
+@import "../../vant/common/index.wxss";
 .fuli-cell {
   background: white;
   color: #353535;

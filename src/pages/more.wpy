@@ -33,45 +33,10 @@ button:after {
 <template>
   <view>
     <guide wx:if="{{showGuide}}"></guide>
-    <!-- <fuli-cell url="./installment" title="分期利率计算" icon="/images/fq.png"></fuli-cell> -->
-    <navigator url="./installment" class="fuli-cell" hover-class="fuli-cell-active">
-      <view class="d-flex">
-        <view class="fuli-cell-left d-flex align-items-center">
-          <image class="fuli-cell-icon" src="../images/bag.png"></image>
-        </view>
-        <view class="fuli-cell-right van-hairline--bottom flex-grow-1 d-flex">
-          <view class="flex-grow-1">
-            <text>分期利率计算器</text>
-          </view>
-          <van-icon name="arrow" color="#888888" class="d-flex align-items-center"></van-icon>
-        </view>
-      </view>
-    </navigator>
-    <!--<navigator url="./houseModel" class="fuli-cell" hover-class="fuli-cell-active">
-      <view class="d-flex">
-        <view class="fuli-cell-left d-flex align-items-center">
-          <image class="fuli-cell-icon" src="../images/home.png"></image>
-        </view>
-        <view class="fuli-cell-right van-hairline&#45;&#45;bottom flex-grow-1 d-flex">
-          <view class="flex-grow-1">
-            <text>二手房投资估算</text>
-          </view>
-          <van-icon name="arrow" color="#888888" class="d-flex align-items-center"></van-icon>
-        </view>
-      </view>
-    </navigator>-->
+     <fuli-cell url="./installment" title="分期利率计算器" icon="/images/bag.png"></fuli-cell>
+     <fuli-cell url="./houseModel" title="二手房投资估算" icon="/images/home.png"></fuli-cell>
     <button open-type="contact">
-      <view class="d-flex fuli-cell" hover-class="fuli-cell-active">
-        <view class="fuli-cell-left d-flex align-items-center">
-          <image class="fuli-cell-icon" src="../images/service.png"></image>
-        </view>
-        <view class="fuli-cell-right flex-grow-1 d-flex van-hairline--bottom">
-          <view class="flex-grow-1">
-            <text>给开发者留言</text>
-          </view>
-          <van-icon name="arrow" color="#888888" class="d-flex align-items-center"></van-icon>
-        </view>
-      </view>
+     <fuli-cell title="给开发者留言" icon="/images/service.png"></fuli-cell>
     </button>
     <view class="d-flex fuli-cell van-hairline--bottom" hover-class="fuli-cell-active" @tap="tipAttention">
       <view class="fuli-cell-left d-flex align-items-center">
