@@ -48,8 +48,7 @@
           clearable
           @input="onExpectInterestInput"
           label="年化收益率"
-          maxlength="3"
-          type="number"
+          type="digit"
           input-align="right"
           use-icon-slot
           size="large"
